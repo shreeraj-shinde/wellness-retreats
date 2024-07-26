@@ -25,9 +25,33 @@ interface PropType {
 }
 
 const Card = ({ item }: { item: PropType }) => {
+  const datetime = item.date;
+  const date = new Date(datetime * 1000);
   return (
-    <div className="bg-[#e0d8ce] px-2">
-      <h1>{item.title}</h1>
+    <div className="bg-[#e0d8ce] p-4 rounded-lg flex flex-col gap-2 hover:scale-[1.02] transition-all">
+      <div className="w-1/2">
+        <img
+          src={item.image}
+          alt={item.type}
+          className="w-full h-32 rounded-lg object-cover "
+        />
+      </div>
+      <h1 className="text-lg font-semibold">{item.title}</h1>
+      <p>{item.description}</p>
+      <p>
+        <span className="font-medium">Location : </span> {item.location}
+      </p>
+      <p>
+        <span className="font-medium">Date : </span>
+        {date.toDateString()}
+      </p>
+      <p>
+        <span className="font-medium">Price : </span>
+        {item.price.toLocaleString("en-IN", {
+          style: "currency",
+          currency: "INR",
+        })}
+      </p>
     </div>
   );
 };
