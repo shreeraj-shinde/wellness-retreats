@@ -1,30 +1,85 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Wellness Retreats
 
-Currently, two official plugins are available:
+A Website which shows events related health retreats
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Clone the git repository
+```bash
+git clone https://github.com/shreeraj-shinde/wellness-retreats.git
 
-- Configure the top-level `parserOptions` property like this:
+```
+Enter the following commands in the terminal
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+  cd wellness-retreats
+  npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+This will install all the dependencies required to run the project.
+
+Now to run the project devlopment mode use
+
+```
+npm run dev
+or
+npm start
+
+```
+
+To build the project for production use
+
+```
+npm build
+```
+
+
+## API Reference
+
+url = https://669f704cb132e2c136fdd9a0.mockapi.io/api/v1/retreats
+
+#### Get all Retreats
+
+```http
+  GET url/
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `no Parameter` | `NA` | Fetches all the retreats |
+
+#### Get item
+
+```http
+  GET url/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+
+```http
+  GET url?{filter}=value
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `filter , value`      | `string , string` | **Required**.  Filter for Fetching the data |
+
+
+
+
+## Features
+
+- Filtering 
+- Dynamin Filter Options
+- Responsive
+
+
+
+
+
+## 
