@@ -29,7 +29,7 @@ const RetreatList = () => {
   const [dateOptions, setDateOptions] = useState<string[]>([]);
 
   const count = data.length;
-  const pageSize = 3;
+  const pageSize = window.innerWidth > 800 && window.innerWidth < 1024 ? 4 : 3;
 
   useEffect(() => {
     fetchData(url).then((response) => {
@@ -49,8 +49,8 @@ const RetreatList = () => {
   return (
     <>
       {/**Filters */}
-      <div className="flex justify-between mt-4">
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-2 md:flex-row justify-between mt-4">
+        <div className="flex flex-col md:flex-row gap-2">
           <Select
             name="FilterByDate"
             title="Filter By Date"
@@ -132,7 +132,7 @@ const Select = ({ title, options, name, setData, date }: SelectPropType) => {
           ? (e) => filterByDate(e.target.value)
           : (e) => filterByCategories(e.target.value)
       }
-      className="px-2 bg-[#1a3352] outline-none text-white text-sm font-medium rounded-lg"
+      className="p-2 md:px-2 bg-[#1a3352] outline-none text-white text-sm font-medium rounded-lg"
     >
       <option defaultValue="">{title}</option>
       {options.map((opt, idx) => (

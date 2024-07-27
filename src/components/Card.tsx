@@ -29,7 +29,7 @@ const Card = ({ item }: { item: PropType }) => {
   const date = new Date(datetime * 1000);
   return (
     <div className="bg-[#e0d8ce] p-4 rounded-lg flex flex-col gap-2 hover:scale-[1.02] transition-all">
-      <div className="w-1/2">
+      <div className="w-4/5 md:w-1/2">
         <img
           src={item.image}
           alt={item.type}

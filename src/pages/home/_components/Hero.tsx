@@ -2,7 +2,7 @@ import heroImage from "../../../assets/images/jared-rice-NTyBbu66_SI-unsplash.jp
 
 const Hero = () => {
   return (
-    <div className="max-w-full px-4 py-4 bg-[#e0d8ce] rounded-lg overflow-hidden shadow-md">
+    <div className="max-w-full px-4 py-4 bg-[#e0d8ce] rounded-lg overflow-hidden shadow-md hidden md:block">
       <img
         className="w-full h-60 object-cover object-center rounded-lg"
         src={heroImage}
