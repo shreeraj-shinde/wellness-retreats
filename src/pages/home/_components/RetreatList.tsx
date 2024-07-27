@@ -1,6 +1,9 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Card from "../../../components/Card";
+import Pagination from "../../../components/Pagination";
+import { paginate } from "../../../utils/paginate";
+import { extractFilterOptions } from "../../../utils/retreatUtils";
+import { fetchData } from "../../../hooks/fetchData";
 
 interface ItemType {
   type: string;
@@ -16,47 +19,62 @@ interface ItemType {
   condition: string;
 }
 
+const url = "https://669f704cb132e2c136fdd9a0.mockapi.io/api/v1/retreats";
+
 const RetreatList = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ItemType[]>([]);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [dateOptions, setDateOptions] = useState<string[]>([]);
+
+  const count = data.length;
+  const pageSize = 3;
+
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        "https://669f704cb132e2c136fdd9a0.mockapi.io/api/v1/retreats"
-      );
-      setData(response.data);
-      console.log(response.data);
-    };
-    fetchData();
+    fetchData(url).then((response) => {
+      setData(response?.data);
+      extractFilterOptions(setCategories, setDateOptions);
+    });
   }, []);
+
+  ///Pagination
+  const onPageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const retreats: ItemType[] = paginate(data, pageSize, currentPage);
 
   if (!data) return <h1>Loading...</h1>;
   return (
     <>
       {/**Filters */}
-      <div className="flex justify-between mt-2">
+      <div className="flex justify-between mt-4">
         <div className="flex gap-2">
           <Select
             name="FilterByDate"
             title="Filter By Date"
-            options={["Jan 2023", "Jan 2024"]}
+            options={dateOptions}
+            setData={setData}
+            date
           />
           <Select
             name="FilterByCategory"
             title="Filter By Category"
-            options={["Meditation", "Yoga"]}
+            options={categories}
+            setData={setData}
           />
         </div>
         <input
-          className="p-[4px] border-2 border-gray outline-none w-full lg:w-1/4 rounded-lg bg-[#1a3352] text-white font-medium"
+          className="p-2 px-2 text-sm border-2 border-gray outline-none w-full lg:w-1/4 rounded-lg bg-[#1a3352] text-white font-medium"
           placeholder="Search Here...."
           type="text"
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {/* Card List */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-2">
-        {data
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
+        {retreats
           .filter((item: ItemType) =>
             item.title.toLowerCase().includes(search.toLowerCase())
           )
@@ -65,6 +83,14 @@ const RetreatList = () => {
             <Card key={index} item={item} />
           ))}
       </div>
+      {!search && (
+        <Pagination
+          itemsCount={count}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          currentPage={currentPage}
+        />
+      )}
     </>
   );
 };
@@ -73,18 +99,45 @@ interface SelectPropType {
   title: string;
   options: string[];
   name: string;
+  setData: Function;
+  date?: boolean;
 }
 
-const Select = ({ title, options, name }: SelectPropType) => {
+const Select = ({ title, options, name, setData, date }: SelectPropType) => {
+  const filterByCategories = (filter: string) => {
+    if (filter.includes("Filter By Category")) {
+      fetchData(url).then((response) => setData(response?.data));
+    } else {
+      fetchData(`${url}?condition=${filter}`).then((response) =>
+        setData(response?.data)
+      );
+    }
+  };
+
+  const filterByDate = (date: string) => {
+    if (date.includes("Filter By Date")) {
+      fetchData(url).then((response) => setData(response?.data));
+    } else {
+      fetchData(`${url}?date=${Number(date)}`).then((response) =>
+        setData(response?.data)
+      );
+    }
+  };
+
   return (
     <select
       name={name}
+      onChange={
+        date
+          ? (e) => filterByDate(e.target.value)
+          : (e) => filterByCategories(e.target.value)
+      }
       className="px-2 bg-[#1a3352] outline-none text-white text-sm font-medium rounded-lg"
     >
-      <option selected>{title}</option>
+      <option defaultValue="">{title}</option>
       {options.map((opt, idx) => (
         <option value={opt} key={idx}>
-          {opt}
+          {date ? new Date(Number(opt) * 1000).toDateString() : opt}
         </option>
       ))}
     </select>
